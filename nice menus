@@ -1,0 +1,27 @@
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+  // Or DocumentApp or FormApp.
+  ui.createMenu('⚡I solemnly swear that I am up to no good')
+      .addItem('🤖 send nags', 'sendNags')
+      .addSeparator()
+      .addSubMenu(ui.createMenu('Send Reports')
+          .addItem('🤖 send Leadership Report', 'menuItem2')
+          .addItem('🤖 send Manager Report', 'menuItem3'))
+      .addToUi();
+}
+
+function notifyMenuItem1() {
+  SpreadsheetApp.getUi() // Or DocumentApp or FormApp.
+     .alert('sent Delivery Review Nags!');
+}
+
+function menuItem2() {
+  SpreadsheetApp.getUi() // Or DocumentApp or FormApp.
+     .alert('This button does nothing!');
+}
+
+function menuItem3() {
+  SpreadsheetApp.getUi() // Or DocumentApp or FormApp.
+     .alert('This button does nothing!');
+}
+  
