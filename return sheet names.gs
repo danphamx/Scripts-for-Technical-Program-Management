@@ -2,5 +2,9 @@
  * @customfunction
  * source: https://support.google.com/docs/thread/14213575?hl=en
  */
-function sheetnames() {return SpreadsheetApp.getActiveSpreadsheet().getSheets().map(function(x) {return x.getName();});}
+function sheetnames() {
+  
+  return SpreadsheetApp.getActiveSpreadsheet().getSheets().map(function(x) {return x.getName();});
+
+}
 
