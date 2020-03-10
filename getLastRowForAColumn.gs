@@ -1,6 +1,7 @@
 /************************************************************************
  *
  * Gets the last row number based on a selected column range values
+ * Author is: https://yagisanatode.com/2019/05/11/google-apps-script-get-the-last-row-of-a-data-range-when-other-columns-have-content-like-hidden-formulas-and-check-boxes/
  *
  * @param {array} range : takes a 2d array of a single column's values
  *
