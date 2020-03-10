@@ -7,6 +7,8 @@
  *
  * @returns {number} : the last row number with a value. 
  *
+ * Note: If using this within code.gs, use getRange.getValues()
+ *
  */ 
 
 function getLastRowSpecial(range){
