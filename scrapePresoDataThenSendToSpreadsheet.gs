@@ -3,7 +3,7 @@ function scrapePresoDataThenSendToSpreadsheet() {
   // Open a spreadsheet by ID.
   var sheetId = 'XXXXXXXXXXXXXXXXXX'
   var ss = SpreadsheetApp.openById(sheetId);
-  var sheetName = ss.getSheetByName("RoadmapExport");
+  var sheetName = ss.getSheetByName("SlidesExport");
   
   // Open a presentation by ID.
   var presoId = 'YTYYYYYYYYYYYYYYYY'
@@ -43,7 +43,7 @@ function scrapePresoDataThenSendToSpreadsheet() {
     // https://www.w3schools.com/jsref/jsref_replace.asp
     
     var slideText = text;
-    slideText = slideText.replace('SLACK CONFIDENTIAL', '');
+    slideText = slideText.replace('RANDOM TEXT', '');
     slideText = slideText.replace('\n\n\n\n\n\n\n\n', '\n');
     slideText = slideText.replace('\n\n\n\n\n\n\n', '\n');
     slideText = slideText.replace('\n\n\n\n\n\n', '\n');
