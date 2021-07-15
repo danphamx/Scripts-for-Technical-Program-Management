@@ -1,0 +1,38 @@
+function getChannels(){
+  var payload = {token:ACCESS_TOKEN, exclude_archived:true, limit:1000, team_id:TEAM_ID  };
+  var response = UrlFetchApp.fetch(CONVERSATIONS_LIST, {method: 'post', payload:payload});
+  //Logger.log(response);
+  var channelListJson = response.getContentText();
+  var channelListData = JSON.parse(channelListJson);
+​
+  // create a placeholder array for channel data
+  var channels = [];
+  
+  // iterate through the response data and pull out the channel names
+  for (let i = 0; i < channelListData.channels.length; i++) {
+    Logger.log(channelListData.channels[i].name);
+    channels.push(channelListData.channels[i].name)
+  }
+	
+  // Since API results are paginated, get next_cursor from previous response metadata
+  // Then send that to the API again with the new "cursor"
+  var next_cursor = channelListData.response_metadata.next_cursor;
+​
+  while (next_cursor) {
+    var payload = {token:ACCESS_TOKEN, exclude_archived:true, limit:1000, team_id:TEAM_ID,cursor:next_cursor };
+    var response = UrlFetchApp.fetch(CONVERSATIONS_LIST, {method: 'post', payload:payload});
+    var channelListJson = response.getContentText();
+    var channelListData = JSON.parse(channelListJson);
+    for (let i = 0; i < channelListData.channels.length; i++) {
+      Logger.log(channelListData.channels[i].name);
+      channels.push(channelListData.channels[i].name)
+    }
+  // The next page will have a new cursor, so use that for the next while loop...
+  var next_cursor = channelListData.response_metadata.next_cursor;
+  }
+​
+  Logger.log(channels)
+  return channels;
+  
+}
+​
