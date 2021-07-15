@@ -1,0 +1,73 @@
+//Modification of the earlier script with some "helper" functions that make it easier to write to a Google Sheet later on
+function getChannels(){
+  var payload = {token:ACCESS_TOKEN, exclude_archived:true, limit:1000, team_id:TEAM_ID  };
+  var response = UrlFetchApp.fetch(CONVERSATIONS_LIST, {method: 'post', payload:payload});
+  //Logger.log(response);
+  var channelListJson = response.getContentText();
+  var channelListData = JSON.parse(channelListJson);
+  // create a placeholder array for channel data
+  var channels = [];
+  var incdChannels = []
+  // iterate through the response data and pull out the channel names
+  for (let i = 0; i < channelListData.channels.length; i++) {
+    //Logger.log(channelListData.channels[i].name);
+    channels.push(morphIntoMatrix(channelListData.channels[i].name))
+    if (channelListData.channels[i].name.includes("incd")){
+      incdChannels.push(morphIntoMatrix(channelListData.channels[i].name))
+    } else {
+      //do nothing
+    }
+  }
+  //Logger.log(channels);
+  //get next_cursor from previous paginated results and put that in the payload
+  var next_cursor = channelListData.response_metadata.next_cursor;
+  while (next_cursor) {
+    var payload = {token:ACCESS_TOKEN, exclude_archived:true, limit:1000, team_id:TEAM_ID,cursor:next_cursor };
+    var response = UrlFetchApp.fetch(CONVERSATIONS_LIST, {method: 'post', payload:payload});
+    var channelListJson = response.getContentText();
+    var channelListData = JSON.parse(channelListJson);
+    for (let i = 0; i < channelListData.channels.length; i++) {
+      //Logger.log(channelListData.channels[i].name);
+      channels.push(morphIntoMatrix(channelListData.channels[i].name))
+      if (channelListData.channels[i].name.includes("incd")){
+        incdChannels.push(morphIntoMatrix(channelListData.channels[i].name))
+        } else {
+        //do nothing
+      }
+    }
+  var next_cursor = channelListData.response_metadata.next_cursor;
+  }
+  Logger.log(incdChannels);
+  //return channels;
+  return incdChannels;
+}
+​
+​
+// Now that I have my data in an array, print to a gSheet
+function printIncdChannelsToSheet(){
+  var data = getChannels();
+  Logger.log(data);
+  var ss = SpreadsheetApp.openById(SHEET_ID)
+  var sheet = ss.getSheetByName("IncdChannels");
+  var range = sheet.getRange("A1:A"+data.length);
+  range.setValues(data);
+}
+​
+​
+// Morphs a 1-d array into a 2-d array for use with Range.setValues([][])
+// source: https://stackoverflow.com/questions/11495588/write-an-array-of-values-to-a-range-of-cells-in-a-spreadsheet
+function morphIntoMatrix(array) {
+  // Create a new array and set the first row of that array to be the original array
+  // This is a sloppy workaround to "morphing" a 1-d array into a 2-d array
+  var matrix = new Array();
+  matrix[0] = array;
+  // "Sanitize" the array by erasing null/"null" values with an empty string ""
+  for (var i = 0; i < matrix.length; i ++) {
+    for (var j = 0; j < matrix[i].length; j ++) {
+      if (matrix[i][j] == null || matrix[i][j] == "null") {
+        matrix[i][j] = "";
+      }
+    }
+  }
+  return matrix;
+}
